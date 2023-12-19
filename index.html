@@ -94,9 +94,6 @@
                     }
 
                     $("#main-games").html(cards)
-                },
-                error: function (xhr) {
-                    console.log(xhr.statusText)
                 }
             });
         }
@@ -121,9 +118,6 @@
                         loadGames()
                         $('#deleteModal').modal("hide");
                     }
-                },
-                error: function (xhr) {
-                    console.log(xhr.statusText)
                 }
             });
         }

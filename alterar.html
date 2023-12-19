@@ -136,12 +136,20 @@
                 }
             });
 
+            $.validator.addMethod("anoValido", function (value, element) {
+                // Verifica se o ano tem 4 dígitos e está dentro de um intervalo razoável (por exemplo, 1900 a 2100)
+                return this.optional(element) || (/^\d{4}$/).test(value) && parseInt(value) >= 1900 && parseInt(value) <= 2100;
+            }, "Digite um ano válido (1900-2100).");
 
             $("#formGame").validate({
                 rules: {
                     descricao: {
                         required: true,
                         maxlength: 100
+                    },
+                    ano: {
+                        required: true,
+                        anoValido: true
                     }
                 },
                 messages: {

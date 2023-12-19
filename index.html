@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="libs/bootstrap-4.6.2-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>Icom Academico Game</h1>
+
+    <div class="row mb-3">
+        <div class="col-12 col-lg-10 mb-2">
+            <input type="text" id="searchGame" class="form-control" placeholder="PESQUISE POR QUALQUER ITEM">
+        </div>
+        <div class="col-12 col-lg-2">
+            <a class="btn btn-success form-control" href="cadastro.html">Criar novo jogo</a>
+        </div>
+
+    </div>
+
+    <div class="d-flex align-items-center justify-content-start flex-wrap custom-gap-1 " id="main-games"></div>
+
+
+    <div class="modal fade" id="deleteModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Tem certeza ?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir <span id="gamenamedelete"></span>?
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="libs/jquery-3.7.1.min.js/script.js"></script>
+    <script src="libs/bootstrap-4.6.2-dist/js/bootstrap.min.js"></script>
+
+    <script>
+
+        function doCards(id, nome, descricao, produtora, ano, idadeMinima) {
+            return `
+            <div class="card" id="${id}">
+                <div class="card-header text-center">${nome}</div>
+                <div class="card-body">
+                    <p class="h-50">${descricao}</p>
+                    <div class="d-flex align-items-start justify-content-center gap-2 text-center h-50 flex-column">
+                        <div>
+                            <strong>Produtora:</strong> ${produtora}
+                        </div>
+                        <div>
+                            <strong>Ano:</strong> ${ano}
+                        </div>
+                        <div>
+                            <strong>Idade:</strong> +${idadeMinima}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a class="btn btn-warning" href="alterar.html?x=${id}">Alterar</a>
+                    <button class="btn btn-danger" onClick="showDeleteModal(${id}, '${nome}')">Deletar</button>
+                </div>
+            </div>
+            
+            `
+        }
+
+        async function loadGames() {
+            await $("#main-games").html("");
+
+            await $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: 'http://127.0.0.1:3000/list/games',
+                success: function (resp) {
+                    var cards = '';
+                    for (let i = 0; i < resp.length; i++) {
+                        cards += doCards(resp[i].id, resp[i].nome, resp[i].descricao, resp[i].produtora, resp[i].ano, resp[i].idadeMinima)
+                    }
+
+                    $("#main-games").html(cards)
+                },
+                error: function (xhr) {
+                    console.log(xhr.statusText)
+                }
+            });
+        }
+
+
+        async function showDeleteModal(id, nome) {
+            await $("#gamenamedelete").html(nome);
+            await $("#deleteModal .modal-footer").html(`
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+                    <button type="button" class="btn btn-danger" onClick="deleteGame(${id})">Sim</button>
+            `);
+            $('#deleteModal').modal("show");
+        }
+
+        async function deleteGame(id) {
+            await $.ajax({
+                type: "DELETE",
+                dataType: "json",
+                url: `http://127.0.0.1:3000/delete/${id}`,
+                success: function (resp) {
+                    if (resp) {
+                        loadGames()
+                        $('#deleteModal').modal("hide");
+                    }
+                },
+                error: function (xhr) {
+                    console.log(xhr.statusText)
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            loadGames();
+        })
+
+        $("#searchGame").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $('#main-games .card').each(function () {
+                var cardText = $(this).text().toLowerCase();
+                if (cardText.indexOf(value) > -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

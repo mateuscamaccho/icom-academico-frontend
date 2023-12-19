@@ -44,6 +44,7 @@ h1 {
     height          : 350px;
     transition      : .3s all;
     background-color: var(--bg-card);
+    max-width: 340px;
 }
 
 @media screen and (max-width:992px) {

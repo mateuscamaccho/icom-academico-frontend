@@ -1,3 +1,20 @@
+:root {
+    --bg               : #474747;
+    --principal-text   : #ffffff;
+    --secondary-text   : #cccccc;
+    --emphasis         : #ffcc00;
+    --bg-card          : #333333;
+    --border-card      : #666666;
+    --shadow           : rgba(0, 0, 0, 0.2);
+    --bg-success-notice: #4caf50;
+    --btn-create       : #2196F3;
+    --btn-save         : #4caf50;
+    --btn-delete       : #f44336;
+    --btn-clear        : #e0e0e0;
+    --btn-alter        : #ff9800;
+    --alternative-text : #333333;
+}
+
 * {
     margin    : 0;
     padding   : 0;
@@ -5,8 +22,9 @@
 }
 
 body {
-    background-color: #2c2c2c;
+    background-color: var(--bg);
     padding         : 30px;
+    color           : var(--principal-text);
 }
 
 
@@ -16,15 +34,16 @@ body {
 
 h1 {
     text-align    : center;
-    color         : #fff;
+    color         : var(--principal-text);
     margin-bottom : 15px;
     text-transform: uppercase;
 }
 
 .card {
-    width     : 300px;
-    height    : 350px;
-    transition: .3s all;
+    flex            : 1 300px;
+    height          : 350px;
+    transition      : .3s all;
+    background-color: var(--bg-card);
 }
 
 @media screen and (max-width:992px) {
@@ -34,9 +53,29 @@ h1 {
 }
 
 .card:hover {
-    box-shadow: .5px 4px 40px rgb(226, 64, 64);
+    box-shadow: .5px 4px 30px rgba(0, 0, 0)
 }
 
 #formGame {
     color: #fff;
+}
+
+.btn-green {
+    background-color: var(--btn-save);
+    color           : var(--principal-text);
+}
+
+.btn-blue {
+    background-color: var(--btn-create);
+    color           : var(--principal-text);
+}
+
+.btn-orange {
+    background-color: var(--btn-alter);
+    color           : var(--principal-text);
+}
+
+.btn-red {
+    background-color: var(--btn-delete);
+    color           : var(--principal-text);
 }
